@@ -4,5 +4,10 @@
     <string name="app_name">Centurion</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="drink">DRINK!!</string>
+    <string name="timeLeft">Time Left:</string>
+    <string name="start">Startt</string>
+    <string name="stop">Stop</string>
+    <string name="testSound">Test Buzzer</string>
 
 </resources>
