@@ -71,18 +71,22 @@ public class MainActivity extends Activity {
 
 		toActivityMain();
 		
+		timeLeft = (TextView)findViewById(R.id.timer);
+		
 		stop = (Button) findViewById(R.id.stop);
 		stop.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View arg0) {
 				if((counter == null)){ 
-					
+					timeLeft.setText("Time Left: " + "00:00:00");
 				}else if(!(counter == null)){
 					counter.cancel();
+					timeLeft.setText("Time Left: " + "00:00:00");
 				}
 				else {
 					counter.cancel();
+					timeLeft.setText("Time Left: " + "00:00:00");
 				}
 			}
 			
