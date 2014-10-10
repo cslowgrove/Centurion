@@ -80,6 +80,7 @@ public class MainActivity extends Activity {
 			public void onClick(View arg0) {
 				if((counter == null)){ 
 					timeLeft.setText("Time Left: " + "00:00:00");
+					counter.cancel();
 				}else if(!(counter == null)){
 					counter.cancel();
 					timeLeft.setText("Time Left: " + "00:00:00");
