@@ -14,7 +14,9 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -37,12 +39,13 @@ public class MainActivity extends Activity {
 	private Vibrator vibrator;
 	private Boolean isBreak;
 	private MediaPlayer buzzer;
+	private Button stop;
 
 	public void toActivityMain(){
 		setContentView(R.layout.activity_main);
-		
-		
-		
+
+
+
 	}
 	public void setActivityBackgroundColor(int color) {
 		View view = this.getWindow().getDecorView();
@@ -59,92 +62,113 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		buzzer = MediaPlayer.create(this, R.raw.buzzer);
-		
+
 		displayedTime = 0;
-		
+
 		toActivityMain();
+		
+		stop = (Button) findViewById(R.id.stop);
+		stop.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				if((counter == null)){ 
+					
+				}else if(!(counter == null)){
+					counter.cancel();
+				}
+				else {
+					counter.cancel();
+				}
+			}
+			
+		});
+		
 	}
 	public void setTextViews(){
 		timeLeft.setText("Stopped");
 		drinkCounterLabel.setText("Stopped");
 	}
-	
+
 	public void stop(final View view){
-		
-		drinkCounter = 1;
-		set = true;
-		//isBreak = false;
-		displayedTime = 0;
-		finished = false;
-		//endSound.stop();
-		toActivityMain();
-		counter.cancel();
+		if(counter != null){
+			drinkCounter = 1;
+			set = true;
+			//isBreak = false;
+			displayedTime = 0;
+			finished = false;
+			counter.cancel();
+			toActivityMain();
+		}else{
+			toActivityMain();
+			counter.cancel();
+		}
 	}
 
-	
+
 	public String getMillis(long milliseconds){
 		String hms = String.format("%02d",
-				
+
 				TimeUnit.MILLISECONDS.toSeconds(milliseconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds)));
 		return hms;
 	}
 
-		public void testBuzzer(final View view){
-			buzzer.start();
+	public void testBuzzer(final View view){
+		buzzer.start();
 
-		}
-		public void run(final View view) {
-			drinkCounterLabel=(TextView)findViewById(R.id.drinkCounter);
-			timeLeft=(TextView)findViewById(R.id.timer);
-			timeLeft.setText("test");
-			drinkCounterLabel.setText("0");
-			drinkCounterLabel.setTextColor(Color.parseColor("#FF0000"));
-			drinkCounterLabel.setTextSize(50);
+	}
+	public void run(final View view) {
+		drinkCounterLabel=(TextView)findViewById(R.id.drinkCounter);
+		timeLeft=(TextView)findViewById(R.id.timer);
+		timeLeft.setText("test");
+		drinkCounterLabel.setText("0");
+		drinkCounterLabel.setTextColor(Color.parseColor("#FF0000"));
+		drinkCounterLabel.setTextSize(50);
 		run2(view);
 	}
-		
+
 	//start of countdown, when user presses the go button.
 	public void run2(final View view) {
 		buzzer.start();
 		displayedTime = 6000;
-		
+
 		if (!finished){ // checks if program is finished
-			
+
 			counter = new CountDownTimer(displayedTime, 1000) {
 				public void onTick(long millisUntilFinished) { // runs every "tick" - in this case every 1000ms - millisuntilfinished hold the current time to completion
-				Log.i("Time",millisUntilFinished+"");
+					Log.i("Time",millisUntilFinished+"");
 					String hms = getMillis(millisUntilFinished);
 
 					String TD = getMillis(displayedTime);
 					displayedTime = displayedTime - 1000;
 					timeLeft.setText("Total Time Left: "+ " \n " + "      "+TD );
-					
+
 					//loopCountValue.setText("Loops Remaining: "+loopCount+".");
-					
+
 				}
-					
+
 				public void onFinish() { // runs when countdown is finished - this nows runs a break period
 					// vibrator.vibrate(1000);
-					
+
 					Handler handler = new Handler(); 
-				    handler.postDelayed(new Runnable() { 
-				         public void run()
-				        		 { setContentView(R.layout.drink);
-				        		 } 
-				    }, 2000); 
+					handler.postDelayed(new Runnable() { 
+						public void run()
+						{ setContentView(R.layout.drink);
+						} 
+					}, 2000); 
 					setContentView(R.layout.activity_main);
-					 drinkCounterLabel.setText(drinkCounter+"");
+					drinkCounterLabel.setText(drinkCounter+"");
 					buzzer.start();
 					drinkCounter++;	
 					//countDown.setProgress(drinkCounter);
-						if (drinkCounter > 100){
-							finished = true;
-						}
-						
+					if (drinkCounter > 100){
+						finished = true;
+					}
+
 					if (!finished){run2(view);} // if finished = false, run "run" method again
 					//(this loops the countdowns repeatedly unitll the loop counter reaches -1
 				} 

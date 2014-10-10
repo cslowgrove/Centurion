@@ -8,43 +8,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.centurion.MainActivity" >
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
-        android:onClick="run"
-        android:text="@string/start" />
-
     <TextView
         android:id="@+id/drinkCounter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="24dp"
-        android:layout_toRightOf="@+id/drinkCounter"
-         android:layout_toEndOf="@+id/drinkCounter"
-        android:text="@string/testSound"
-        android:onClick="testBuzzer" />
-
-    <Button
-        android:id="@id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button3"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
-        android:layout_marginStart="46dp"
-         android:layout_marginLeft="46dp"
-        android:onClick="stop"
-        android:text="@string/stop" />
 
     <TextView
         android:id="@+id/timer"
@@ -54,5 +22,36 @@
         android:layout_alignLeft="@+id/button3"
         android:layout_marginBottom="82dp"
         android:text="TextView" />
+
+    <Button
+        android:id="@+id/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button3"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="28dp"
+        android:layout_marginStart="46dp"
+        android:text="@string/stop" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/stop"
+        android:layout_alignBottom="@id/stop"
+        android:layout_alignLeft="@+id/drinkCounter"
+        android:onClick="run"
+        android:text="@string/start" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="56dp"
+        android:layout_toEndOf="@+id/drinkCounter"
+        android:onClick="testBuzzer"
+        android:text="@string/testSound" />
 
 </RelativeLayout>
