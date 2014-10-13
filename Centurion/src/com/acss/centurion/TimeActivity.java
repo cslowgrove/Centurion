@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +24,7 @@ public class TimeActivity extends ActionBarActivity {
 	private Handler handler;
 	
 	//How long between delays in miliseconds
-	private long delay = 60000; //1 min
+	private long delay = 1000; //1 min
 	private MediaPlayer buzzer;
 	private boolean running;
 	
@@ -51,8 +52,10 @@ public class TimeActivity extends ActionBarActivity {
 		shotsHad.setText(getResources().getString(R.string.shotsHad) + " " + no);
 		
 		statusButton = (Button) findViewById(R.id.statusButton);
+		statusButton.setText("Start");
 		
 		stopButton = (Button) findViewById(R.id.stopButton);
+		stopButton.setText("Stop");
 		
 		handler = new Handler();
 		
@@ -96,6 +99,18 @@ public class TimeActivity extends ActionBarActivity {
 						public void onClick(View v) {
 							
 							stop();					
+							
+						}	
+						
+					});
+				 
+				 statusButton.setText("Restart?");
+				 statusButton.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							
+							setUp();				
 							
 						}	
 						
@@ -188,5 +203,16 @@ public class TimeActivity extends ActionBarActivity {
 		
 		finish();
 		
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+	    if ((keyCode == KeyEvent.KEYCODE_BACK))
+	    {
+	    	handler.removeCallbacks(runnable);	
+	        finish();
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 }
