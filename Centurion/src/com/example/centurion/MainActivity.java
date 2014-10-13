@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -14,18 +15,17 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
 
 	private boolean finished = false; //toggles when timer has ended
-	private long breakTime = 0; //milliseconds for each break
-	private long studyTime = 0; //milliseconds for each study period
-	private int loopCount = 0 ; //number of loops to complete
-	private long totalTime = 0; // totAL TIME FOR APP TO RUN
-	private boolean set = true;
 	private long displayedTime ;
 	private int drinkCounter = 1;
 
@@ -37,6 +37,8 @@ public class MainActivity extends Activity {
 	private Vibrator vibrator;
 	private Boolean isBreak;
 	private MediaPlayer buzzer;
+	private EditText startTime;
+	private int minutesToRun;
 
 	public void toActivityMain(){
 		setContentView(R.layout.activity_main);
@@ -67,6 +69,29 @@ public class MainActivity extends Activity {
 		displayedTime = 0;
 		
 		toActivityMain();
+		
+		Button startButton = (Button)findViewById(R.id.startButton);
+		startButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				startTime = (EditText) findViewById(R.id.startTime);
+				if(startTime.getText().toString().equals("")) {
+					Toast.makeText(getApplicationContext(), "Please enter in a time!", Toast.LENGTH_SHORT).show();
+				} else {
+					minutesToRun = Integer.parseInt(startTime.getText().toString());
+					Toast.makeText(getApplicationContext(), minutesToRun + "!", Toast.LENGTH_SHORT).show();
+					
+					Intent intent = new Intent(getApplicationContext(), TimeActivity.class);
+					intent.putExtra("time", minutesToRun);
+					startActivity(intent);
+					
+				}
+				
+			}
+			
+		});
+		
 	}
 	public void setTextViews(){
 		timeLeft.setText("Stopped");
@@ -76,7 +101,6 @@ public class MainActivity extends Activity {
 	public void stop(final View view){
 		
 		drinkCounter = 1;
-		set = true;
 		//isBreak = false;
 		displayedTime = 0;
 		finished = false;
@@ -97,10 +121,15 @@ public class MainActivity extends Activity {
 			buzzer.start();
 
 		}
-		public void run(final View view) {
+		
+		public void run() {
+			
+		}
+		/*public void run(final View view) {
 			drinkCounterLabel=(TextView)findViewById(R.id.drinkCounter);
 			timeLeft=(TextView)findViewById(R.id.timer);
 			timeLeft.setText("test");
+			
 			drinkCounterLabel.setText("0");
 			drinkCounterLabel.setTextColor(Color.parseColor("#FF0000"));
 			drinkCounterLabel.setTextSize(50);
@@ -110,6 +139,7 @@ public class MainActivity extends Activity {
 	//start of countdown, when user presses the go button.
 	public void run2(final View view) {
 		buzzer.start();
+		Toast.makeText(getApplicationContext(), startTime.getText().toString(), Toast.LENGTH_SHORT).show();
 		displayedTime = 6000;
 		
 		if (!finished){ // checks if program is finished
@@ -151,5 +181,5 @@ public class MainActivity extends Activity {
 
 			}.start(); // starts countdown (i think)
 		}
-	}
+	}*/
 }

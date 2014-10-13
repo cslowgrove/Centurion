@@ -9,5 +9,7 @@
     <string name="start">Startt</string>
     <string name="stop">Stop</string>
     <string name="testSound">Test Buzzer</string>
+    <string name="title_activity_time">TimeActivity</string>
+    <string name="shots">Shots Remaining: </string>
 
 </resources>
