@@ -18,7 +18,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+<<<<<<< HEAD
 import android.widget.EditText;
+=======
+>>>>>>> f2b5aee590c1e30149ff038c1037b64ef5008cf0
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,14 +40,18 @@ public class MainActivity extends Activity {
 	private Vibrator vibrator;
 	private Boolean isBreak;
 	private MediaPlayer buzzer;
+<<<<<<< HEAD
 	private EditText startTime;
 	private int minutesToRun;
+=======
+	private Button stop;
+>>>>>>> f2b5aee590c1e30149ff038c1037b64ef5008cf0
 
 	public void toActivityMain(){
 		setContentView(R.layout.activity_main);
-		
-		
-		
+
+
+
 	}
 	public void setActivityBackgroundColor(int color) {
 		View view = this.getWindow().getDecorView();
@@ -61,15 +68,16 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		buzzer = MediaPlayer.create(this, R.raw.buzzer);
-		
+
 		displayedTime = 0;
-		
+
 		toActivityMain();
 		
+<<<<<<< HEAD
 		Button startButton = (Button)findViewById(R.id.startButton);
 		startButton.setOnClickListener(new OnClickListener() {
 
@@ -88,6 +96,26 @@ public class MainActivity extends Activity {
 					
 				}
 				
+=======
+		timeLeft = (TextView)findViewById(R.id.timer);
+		
+		stop = (Button) findViewById(R.id.stop);
+		stop.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				if((counter == null)){ 
+					timeLeft.setText("Time Left: " + "00:00:00");
+					counter.cancel();
+				}else if(!(counter == null)){
+					counter.cancel();
+					timeLeft.setText("Time Left: " + "00:00:00");
+				}
+				else {
+					counter.cancel();
+					timeLeft.setText("Time Left: " + "00:00:00");
+				}
+>>>>>>> f2b5aee590c1e30149ff038c1037b64ef5008cf0
 			}
 			
 		});
@@ -97,8 +125,9 @@ public class MainActivity extends Activity {
 		timeLeft.setText("Stopped");
 		drinkCounterLabel.setText("Stopped");
 	}
-	
+
 	public void stop(final View view){
+<<<<<<< HEAD
 		
 		drinkCounter = 1;
 		//isBreak = false;
@@ -107,19 +136,34 @@ public class MainActivity extends Activity {
 		//endSound.stop();
 		toActivityMain();
 		counter.cancel();
+=======
+		if(counter != null){
+			drinkCounter = 1;
+			set = true;
+			//isBreak = false;
+			displayedTime = 0;
+			finished = false;
+			counter.cancel();
+			toActivityMain();
+		}else{
+			toActivityMain();
+			counter.cancel();
+		}
+>>>>>>> f2b5aee590c1e30149ff038c1037b64ef5008cf0
 	}
 
-	
+
 	public String getMillis(long milliseconds){
 		String hms = String.format("%02d",
-				
+
 				TimeUnit.MILLISECONDS.toSeconds(milliseconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds)));
 		return hms;
 	}
 
-		public void testBuzzer(final View view){
-			buzzer.start();
+	public void testBuzzer(final View view){
+		buzzer.start();
 
+<<<<<<< HEAD
 		}
 		
 		public void run() {
@@ -133,48 +177,58 @@ public class MainActivity extends Activity {
 			drinkCounterLabel.setText("0");
 			drinkCounterLabel.setTextColor(Color.parseColor("#FF0000"));
 			drinkCounterLabel.setTextSize(50);
+=======
+	}
+	public void run(final View view) {
+		drinkCounterLabel=(TextView)findViewById(R.id.drinkCounter);
+		timeLeft=(TextView)findViewById(R.id.timer);
+		timeLeft.setText("test");
+		drinkCounterLabel.setText("0");
+		drinkCounterLabel.setTextColor(Color.parseColor("#FF0000"));
+		drinkCounterLabel.setTextSize(50);
+>>>>>>> f2b5aee590c1e30149ff038c1037b64ef5008cf0
 		run2(view);
 	}
-		
+
 	//start of countdown, when user presses the go button.
 	public void run2(final View view) {
 		buzzer.start();
 		Toast.makeText(getApplicationContext(), startTime.getText().toString(), Toast.LENGTH_SHORT).show();
 		displayedTime = 6000;
-		
+
 		if (!finished){ // checks if program is finished
-			
+
 			counter = new CountDownTimer(displayedTime, 1000) {
 				public void onTick(long millisUntilFinished) { // runs every "tick" - in this case every 1000ms - millisuntilfinished hold the current time to completion
-				Log.i("Time",millisUntilFinished+"");
+					Log.i("Time",millisUntilFinished+"");
 					String hms = getMillis(millisUntilFinished);
 
 					String TD = getMillis(displayedTime);
 					displayedTime = displayedTime - 1000;
 					timeLeft.setText("Total Time Left: "+ " \n " + "      "+TD );
-					
+
 					//loopCountValue.setText("Loops Remaining: "+loopCount+".");
-					
+
 				}
-					
+
 				public void onFinish() { // runs when countdown is finished - this nows runs a break period
 					// vibrator.vibrate(1000);
-					
+
 					Handler handler = new Handler(); 
-				    handler.postDelayed(new Runnable() { 
-				         public void run()
-				        		 { setContentView(R.layout.drink);
-				        		 } 
-				    }, 2000); 
+					handler.postDelayed(new Runnable() { 
+						public void run()
+						{ setContentView(R.layout.drink);
+						} 
+					}, 2000); 
 					setContentView(R.layout.activity_main);
-					 drinkCounterLabel.setText(drinkCounter+"");
+					drinkCounterLabel.setText(drinkCounter+"");
 					buzzer.start();
 					drinkCounter++;	
 					//countDown.setProgress(drinkCounter);
-						if (drinkCounter > 100){
-							finished = true;
-						}
-						
+					if (drinkCounter > 100){
+						finished = true;
+					}
+
 					if (!finished){run2(view);} // if finished = false, run "run" method again
 					//(this loops the countdowns repeatedly unitll the loop counter reaches -1
 				} 
