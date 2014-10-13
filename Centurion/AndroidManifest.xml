@@ -26,7 +26,8 @@
         </activity>
         <activity
             android:name=".TimeActivity"
-            android:label="@string/title_activity_time" >
+            android:label="@string/title_activity_time"
+            android:configChanges="orientation|screenSize" >
         </activity>
     </application>
 
