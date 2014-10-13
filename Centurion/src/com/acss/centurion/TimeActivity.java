@@ -35,9 +35,10 @@ public class TimeActivity extends ActionBarActivity {
 		
 		shots = (TextView) findViewById(R.id.shots);
 		
-		shots = (TextView) findViewById(R.id.shotsHad);
+		shotsHad = (TextView) findViewById(R.id.shotsHad);
 		
 		shots.setText(getResources().getString(R.string.shots) + " " + time);
+		shotsHad.setText(getResources().getString(R.string.shotsHad) + " " + no);
 		
 		statusButton = (Button) findViewById(R.id.statusButton);
 		
@@ -108,9 +109,12 @@ public class TimeActivity extends ActionBarActivity {
 	private boolean buzz() {
 		 buzzer.start();
 		 time--;
+		 no++;
 		 
 		 if(time > 0) {
 			 shots.setText(getResources().getString(R.string.shots) + " " + time);
+
+				shotsHad.setText(getResources().getString(R.string.shotsHad) + " " + no);
 			 return true;
 		 }else {
 			 
