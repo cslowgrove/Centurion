@@ -1,6 +1,9 @@
 package com.acss.centurion;
-
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+/**
+ *  The Main Class that is run on startup.
+ *  Allows the user to test the buzzer and
+ *  set the number of minutes to run for.
+ */
 import java.util.concurrent.TimeUnit;
 
 import com.example.centurion.R;
@@ -12,13 +15,9 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.Vibrator;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,23 +30,18 @@ public class MainActivity extends Activity {
 	private long displayedTime ;
 	private int drinkCounter = 1;
 
-	//ProgressBar countDown;
-	private TextView timeLeftName;
 	private TextView timeLeft;
 	private TextView drinkCounterLabel;
 	private CountDownTimer counter;
 	private Vibrator vibrator;
-	private Boolean isBreak;
 	private MediaPlayer buzzer;
 	private EditText startTime;
 	private int minutesToRun;
 
 	public void toActivityMain(){
 		setContentView(R.layout.activity_main);
-		
-		
-		
 	}
+	
 	public void setActivityBackgroundColor(int color) {
 		View view = this.getWindow().getDecorView();
 		if (color == 1) // main menu
@@ -80,9 +74,13 @@ public class MainActivity extends Activity {
 				startTime = (EditText) findViewById(R.id.startTime);
 				if(startTime.getText().toString().equals("")) {
 					Toast.makeText(getApplicationContext(), "Please enter in a time!", Toast.LENGTH_SHORT).show();
+				} 
+				else if (Integer.parseInt(startTime.getText().toString()) <= 0 ){
+					
+					Toast.makeText(getApplicationContext(), "Please enter in a time grater than 0 minutes!", Toast.LENGTH_SHORT).show();				
+					
 				} else {
 					minutesToRun = Integer.parseInt(startTime.getText().toString());
-					Toast.makeText(getApplicationContext(), minutesToRun + "!", Toast.LENGTH_SHORT).show();
 					
 					Intent intent = new Intent(getApplicationContext(), TimeActivity.class);
 					intent.putExtra("time", minutesToRun);

@@ -17,21 +17,31 @@ import android.widget.TextView;
 public class TimeActivity extends ActionBarActivity {
 
 	private int time;
-	private int no = 0;
+	private int no;
 	private TextView shots, shotsHad;
 	private Button statusButton, stopButton;
 	private Handler handler;
-	private long delay = 1000;
+	
+	//How long between delays in miliseconds
+	private long delay = 60000; //1 min
 	private MediaPlayer buzzer;
-	private boolean running = false;
+	private boolean running;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_time);
 		
+		setUp();
+		
+	}
+	
+	private void setUp() {
 		Intent intent = getIntent();
 		time = intent.getIntExtra("time", 100);
+		
+		no = 0;
+		running = false;
 		
 		shots = (TextView) findViewById(R.id.shots);
 		
@@ -76,13 +86,25 @@ public class TimeActivity extends ActionBarActivity {
 				
 				handler.removeCallbacks(runnable);	
 				
-				stop();
+				shots.setText("Finished!");
+				 shotsHad.setText("You have had " + no + " shots!");
+				 
+				 stopButton.setText("Quit!");
+				 stopButton.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							
+							stop();					
+							
+						}	
+						
+					});
 				
 				
 			}	
 			
 		});
-		
 	}
 		
 		
@@ -119,6 +141,33 @@ public class TimeActivity extends ActionBarActivity {
 		 }else {
 			 
 			 shots.setText("Finished!");
+			 shotsHad.setText("You have had " + no + " shots!");
+			 
+			 stopButton.setText("Quit!");
+			 stopButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						
+						stop();					
+						
+					}	
+					
+				});
+			 
+			 
+			 statusButton.setText("Restart?");
+			 statusButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						
+						setUp();				
+						
+					}	
+					
+				});
+			 
 			 return false;
 		 }
 	}
