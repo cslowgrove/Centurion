@@ -1,4 +1,6 @@
-package com.example.centurion;
+package com.acss.centurion;
+
+import com.example.centurion.R;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;

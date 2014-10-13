@@ -1,7 +1,9 @@
-package com.example.centurion;
+package com.acss.centurion;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import com.example.centurion.R;
 
 import android.app.Activity;
 import android.content.Context;
