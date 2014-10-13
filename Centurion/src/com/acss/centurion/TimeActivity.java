@@ -17,7 +17,8 @@ import android.widget.TextView;
 public class TimeActivity extends ActionBarActivity {
 
 	private int time;
-	private TextView shots;
+	private int no = 0;
+	private TextView shots, shotsHad;
 	private Button statusButton, stopButton;
 	private Handler handler;
 	private long delay = 1000;
@@ -33,6 +34,8 @@ public class TimeActivity extends ActionBarActivity {
 		time = intent.getIntExtra("time", 100);
 		
 		shots = (TextView) findViewById(R.id.shots);
+		
+		shots = (TextView) findViewById(R.id.shotsHad);
 		
 		shots.setText(getResources().getString(R.string.shots) + " " + time);
 		

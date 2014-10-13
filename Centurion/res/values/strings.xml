@@ -11,5 +11,6 @@
     <string name="testSound">Test Buzzer</string>
     <string name="title_activity_time">TimeActivity</string>
     <string name="shots">Shots Remaining: </string>
+    <string name="shotsHad">Shots Drank: </string>
 
 </resources>

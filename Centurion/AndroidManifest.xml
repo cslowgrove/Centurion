@@ -28,7 +28,7 @@
         <activity
             android:name="com.acss.centurion.TimeActivity"
             android:label="@string/title_activity_time"
-            android:configChanges="orientation|screenSize" >
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
