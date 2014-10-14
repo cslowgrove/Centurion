@@ -24,7 +24,7 @@ public class TimeActivity extends ActionBarActivity {
 	private Handler handler;
 	
 	//How long between delays in miliseconds
-	private long delay = 1000; //1 min
+	private long delay = 60000; //1 min
 	private MediaPlayer buzzer;
 	private boolean running;
 	
