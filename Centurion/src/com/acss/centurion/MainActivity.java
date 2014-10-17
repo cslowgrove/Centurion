@@ -9,13 +9,20 @@ import java.util.concurrent.TimeUnit;
 import com.example.centurion.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,35 +33,23 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	private boolean finished = false; //toggles when timer has ended
-	private long displayedTime ;
-	private int drinkCounter = 1;
-
-	private TextView timeLeft;
+	private TextView timeLeft, shots, shotsHad, timeRunFor;
 	private TextView drinkCounterLabel;
 	private CountDownTimer counter;
 	private Vibrator vibrator;
 	private MediaPlayer buzzer;
 	private EditText startTime;
 	private int minutesToRun;
+	private int shotsSet;
+	private int time = 0;
+	private int no;
+	private static Handler handler;
+	private Button startButton, bottomButton;
+	private boolean running;
+	private static NotificationManager mNotificationManager;
+	private long delay = 60000; //1 min
 
-	public void toActivityMain(){
-		setContentView(R.layout.activity_main);
-	}
 	
-	public void setActivityBackgroundColor(int color) {
-		View view = this.getWindow().getDecorView();
-		if (color == 1) // main menu
-			view.setBackgroundColor(Color.WHITE);
-		else if (color == 2) // study page
-			view.setBackgroundColor(Color.rgb(0,176,52));
-		else if (color == 3)// break page
-			view.setBackgroundColor(Color.rgb(051,204,255));
-		else if (color == 4)// finish screen
-			view.setBackgroundColor(Color.rgb(255,0,0));
-	}
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -62,11 +57,13 @@ public class MainActivity extends Activity {
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		buzzer = MediaPlayer.create(this, R.raw.buzzer);
 		
-		displayedTime = 0;
+		shots = (TextView) findViewById(R.id.shots);
+		shotsHad = (TextView) findViewById(R.id.shotsHad);
+				
+		setContentView(R.layout.activity_main);
 		
-		toActivityMain();
-		
-		Button startButton = (Button)findViewById(R.id.startButton);
+		startButton = (Button)findViewById(R.id.startButton);
+		bottomButton = (Button)findViewById(R.id.bottomButton); 
 		startButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -82,9 +79,7 @@ public class MainActivity extends Activity {
 				} else {
 					minutesToRun = Integer.parseInt(startTime.getText().toString());
 					
-					Intent intent = new Intent(getApplicationContext(), TimeActivity.class);
-					intent.putExtra("time", minutesToRun);
-					startActivity(intent);
+					setUp();
 					
 				}
 				
@@ -92,23 +87,200 @@ public class MainActivity extends Activity {
 			
 		});
 		
+		bottomButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				testBuzzer();
+				
+			}
+			
+		});
+		
 	}
+	
+	private void setUp() {
+		shots = (TextView) findViewById(R.id.shots);
+		shotsHad = (TextView) findViewById(R.id.shotsHad);
+		timeRunFor = (TextView) findViewById(R.id.timeRunFor);
+		
+		shots.setVisibility(View.VISIBLE);
+		shotsHad.setVisibility(View.VISIBLE);
+		
+		startTime.setVisibility(View.GONE);
+		timeRunFor.setVisibility(View.GONE);
+		
+		startButton.setText("Start");
+		
+		shotsSet = time = minutesToRun;
+		no = 0;
+		running = false;
+		
+		shots.setText(getResources().getString(R.string.shots) + " " + time);
+		shotsHad.setText(getResources().getString(R.string.shotsHad) + " " + no);
+		
+		startButton = (Button) findViewById(R.id.startButton);
+		startButton.setText("Start");
+
+		bottomButton = (Button) findViewById(R.id.bottomButton);
+		bottomButton.setText("Stop");
+
+		handler = new Handler();
+
+		buzzer = MediaPlayer.create(this, R.raw.buzzer);
+
+		startButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				notification(null);
+
+				if(!running) {
+					handler.postDelayed(runnable, delay);
+					startButton.setText("Pause");
+					running = true;
+				} else {
+					handler.removeCallbacks(runnable);
+					
+					notification("Paused: ");
+					
+					startButton.setText("Resume");
+					running = false;
+				}
+
+
+
+			}	
+
+		});
+
+		bottomButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				handler.removeCallbacks(runnable);	
+
+				shots.setText("Finished!");
+				shotsHad.setText("You have had " + no + " shots!");
+				notification("Finished: ");
+				bottomButton.setText("Quit!");
+				bottomButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+
+						quit();					
+
+					}	
+
+				});
+
+				startButton.setText("Resume?");
+				startButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+
+						resume();				
+
+					}	
+
+				});
+
+
+			}	
+
+		});
+		
+		notification(null);
+		
+	}
+	
+	
+private void notification(String s) {
+		
+		if(mNotificationManager != null)
+			mNotificationManager.cancelAll();
+		
+		NotificationCompat.Builder mBuilder =
+
+					new NotificationCompat.Builder(this)
+			.setSmallIcon(R.drawable.ic_launcher)
+			.setContentTitle("ACSS Centurion")
+			.setOngoing(true);
+		
+		if(s == null)
+			mBuilder.setContentText(no + "/" + shotsSet + " Shots Drank!");
+		else	
+			mBuilder.setContentText(s + no + "/" + shotsSet + " Shots Drank!");
+		
+		
+			mNotificationManager =
+					(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			// mId allows you to update the notification later on.
+			mNotificationManager.notify(0, mBuilder.build());
+
+			
+	}
+
+	private boolean buzz() {
+		buzzer.start();
+
+		if(vibrator.hasVibrator()) {
+			vibrator.vibrate(500);
+		}
+
+		time--;
+		no++;
+
+		notification(null);
+
+		if(time > 0) {
+			shots.setText(getResources().getString(R.string.shots) + " " + time);
+
+			shotsHad.setText(getResources().getString(R.string.shotsHad) + " " + no);
+			return true;
+		}else {
+
+			shots.setText("Finished: ");
+			shotsHad.setText("You have had " + no + " shots!");
+
+			bottomButton.setText("Quit!");
+			notification("Finished ");
+			bottomButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+
+					quit();					
+
+				}	
+
+			});
+
+
+			startButton.setText("Restart?");
+			startButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					setUp();				
+
+				}	
+
+			});
+
+			return false;
+		}
+	}
+	
 	public void setTextViews(){
 		timeLeft.setText("Stopped");
 		drinkCounterLabel.setText("Stopped");
 	}
-	
-	public void stop(final View view){
-		
-		drinkCounter = 1;
-		//isBreak = false;
-		displayedTime = 0;
-		finished = false;
-		//endSound.stop();
-		toActivityMain();
-		counter.cancel();
-	}
-
 	
 	public String getMillis(long milliseconds){
 		String hms = String.format("%02d",
@@ -117,69 +289,155 @@ public class MainActivity extends Activity {
 		return hms;
 	}
 
-		public void testBuzzer(final View view){
+		public void testBuzzer(){
 			buzzer.start();
+			
+			if(vibrator.hasVibrator()) {
+				vibrator.vibrate(500);
+			}
 
 		}
 		
-		public void run() {
-			
-		}
-		/*public void run(final View view) {
-			drinkCounterLabel=(TextView)findViewById(R.id.drinkCounter);
-			timeLeft=(TextView)findViewById(R.id.timer);
-			timeLeft.setText("test");
-			
-			drinkCounterLabel.setText("0");
-			drinkCounterLabel.setTextColor(Color.parseColor("#FF0000"));
-			drinkCounterLabel.setTextSize(50);
-		run2(view);
-	}
-		
-	//start of countdown, when user presses the go button.
-	public void run2(final View view) {
-		buzzer.start();
-		Toast.makeText(getApplicationContext(), startTime.getText().toString(), Toast.LENGTH_SHORT).show();
-		displayedTime = 6000;
-		
-		if (!finished){ // checks if program is finished
-			
-			counter = new CountDownTimer(displayedTime, 1000) {
-				public void onTick(long millisUntilFinished) { // runs every "tick" - in this case every 1000ms - millisuntilfinished hold the current time to completion
-				Log.i("Time",millisUntilFinished+"");
-					String hms = getMillis(millisUntilFinished);
+				
+		@Override
+		public boolean onKeyDown(int keyCode, KeyEvent event)
+		{
+			if ((keyCode == KeyEvent.KEYCODE_BACK))
+			{
+				quit();
 
-					String TD = getMillis(displayedTime);
-					displayedTime = displayedTime - 1000;
-					timeLeft.setText("Total Time Left: "+ " \n " + "      "+TD );
+			}
+			return super.onKeyDown(keyCode, event);
+		}
+
+		private void quit() {
+			new AlertDialog.Builder(this)
+			.setIcon(android.R.drawable.ic_dialog_alert)
+			.setTitle("Are you sure you want to quit?")
+			.setMessage("Quit?")
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+					handler.removeCallbacks(runnable);
+
+					NotificationManager notificationManager;
+					notificationManager =
+					(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+					notificationManager.cancelAll();
 					
-					//loopCountValue.setText("Loops Remaining: "+loopCount+".");
+					//first = true;
 					
+					finish();    
 				}
-					
-				public void onFinish() { // runs when countdown is finished - this nows runs a break period
-					// vibrator.vibrate(1000);
-					
-					Handler handler = new Handler(); 
-				    handler.postDelayed(new Runnable() { 
-				         public void run()
-				        		 { setContentView(R.layout.drink);
-				        		 } 
-				    }, 2000); 
-					setContentView(R.layout.activity_main);
-					 drinkCounterLabel.setText(drinkCounter+"");
-					buzzer.start();
-					drinkCounter++;	
-					//countDown.setProgress(drinkCounter);
-						if (drinkCounter > 100){
-							finished = true;
-						}
-						
-					if (!finished){run2(view);} // if finished = false, run "run" method again
-					//(this loops the countdowns repeatedly unitll the loop counter reaches -1
-				} 
 
-			}.start(); // starts countdown (i think)
+			})
+			.setNegativeButton("No", null)
+			.show();
 		}
-	}*/
+
+		@Override
+		public void onDestroy() {
+			Log.i("YO", "onDestroy called");
+
+			handler.removeCallbacks(runnable);
+
+			if(mNotificationManager != null)
+				mNotificationManager.cancelAll();
+
+			finish(); 
+			
+			super.onDestroy();
+		}
+		
+		
+		private Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				/* do what you need to do */
+				if(buzz()) {
+					/* and here comes the "trick" */
+					handler.postDelayed(this, delay);
+
+				}
+
+			}
+		};
+		
+		private void resume() {
+			handler.postDelayed(runnable, delay);
+			startButton.setText("Pause");
+			bottomButton.setText("Stop");
+			running = true;
+			shots.setText(getResources().getString(R.string.shots) + " " + time);
+			shotsHad.setText(getResources().getString(R.string.shotsHad) + " " + no);
+			startButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					notification(null);
+
+					if(!running) {
+						handler.postDelayed(runnable, delay);
+						startButton.setText("Pause");
+						running = true;
+					} else {
+						handler.removeCallbacks(runnable);
+						
+						notification("Paused: ");
+						
+						startButton.setText("Resume");
+						running = false;
+					}
+
+
+
+				}	
+
+			});
+
+			bottomButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					handler.removeCallbacks(runnable);	
+
+					shots.setText("Finished!");
+					shotsHad.setText("You have had " + no + " shots!");
+					notification("Finished: ");
+					bottomButton.setText("Quit!");
+					bottomButton.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+
+							quit();					
+
+						}	
+
+					});
+
+					startButton.setText("Resume?");
+					startButton.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+
+							resume();				
+
+						}	
+
+					});
+
+
+				}	
+
+			});
+			
+			notification(null);
+		}
+
 }

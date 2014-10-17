@@ -15,23 +15,44 @@
         android:layout_alignLeft="@+id/startButton"
         android:layout_alignParentTop="true"
         android:src="@drawable/acss_logo" />
-
+    
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/bottomButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="testBuzzer"
         android:text="@string/testSound" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/shots"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@+id/imageView2"
+        android:layout_below="@+id/shotsHad"
+        android:layout_marginTop="25dp"
+        android:text="@string/shots"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/shotsHad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/shots"
         android:layout_below="@+id/imageView2"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/shotsHad"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/timeRunFor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView2"
+        android:layout_below="@+id/imageView2"
+        android:layout_marginTop="16dp"
         android:text="Minutes to run for:"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -39,9 +60,9 @@
         android:id="@+id/startTime"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="14dp"
+        android:layout_alignLeft="@+id/timeRunFor"
+        android:layout_below="@+id/timeRunFor"
+        android:layout_marginTop="19dp"
         android:ems="10"
         android:inputType="number" >
 
@@ -52,8 +73,8 @@
         android:id="@+id/startButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/startTime"
-        android:layout_below="@+id/startTime"
+        android:layout_above="@+id/bottomButton"
+        android:layout_alignLeft="@+id/bottomButton"
         android:text="@string/start" />
    
 </RelativeLayout>
