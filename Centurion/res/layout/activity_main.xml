@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/startButton"
         android:layout_alignParentTop="true"
@@ -30,9 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/imageView2"
         android:layout_below="@+id/shotsHad"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="16dp"
         android:text="@string/shots"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="32dp"
         android:visibility="gone" />
 
     <TextView
@@ -43,7 +43,7 @@
         android:layout_below="@+id/imageView2"
         android:layout_marginTop="16dp"
         android:text="@string/shotsHad"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="32dp"
         android:visibility="gone" />
 
     <TextView
